@@ -21,7 +21,14 @@ def connect(func):
             print("Соединение с БД установлено")
             try:
                 with connection.cursor() as cursor:
-                    cursor.execute(func(*args, **kwargs))
+                    if isinstance(func(*args, **kwargs), tuple):
+                        sql, *values = func(*args, **kwargs)
+                        if values is not None:
+                            cursor.execute(sql, values)
+                        else:
+                            cursor.execute(sql)
+                    else:
+                        cursor.execute(func(*args, **kwargs))
                     connection.commit()
             finally:
                 connection.close()
@@ -53,23 +60,34 @@ def logger(func):
 
 @connect
 @logger
-def create_table() -> str:
+def create_table(table_name) -> tuple:
     """Функция создает таблицу 'users' и возвращает строку """
-    query = "CREATE TABLE IF NOT EXISTS `users`" \
-            "\n(`id` int(11) NOT NULL AUTO_INCREMENT," \
-            "\n`password` varchar(255) NOT NULL," \
-            "\nPRIMARY KEY (`id`))"
-    return query
+    query = ("CREATE TABLE IF NOT EXISTS `%s`"
+            "(`id` int(11) NOT NULL AUTO_INCREMENT,"
+            "`email` varchar(100) NOT NULL," 
+            "`password` varchar(255) NOT NULL,"
+            "PRIMARY KEY (`id`))")
+    return query, table_name
 
 
 @connect
 @logger
 def list_users() -> str:
     """Функуия возвращает всех пользователей из таблицы 'users'"""
-    query = "SELECT * FROM `users`"
+    query = "SELECT * FROM `'users'`"
     return query
 
 
+@connect
+@logger
+def create_user(email: str, password: str) -> tuple:
+    """Функция возвращает sql-запрос на создание нового пользователя"""
+    query = ("INSERT INTO `'users'` (`email`, `password`) "
+            "VALUES (%s, %s)")
+    return query, email, password
+
+
 if __name__ == '__main__':
-    create_table()
-    list_users()
+    create_table('users')
+    create_user('gosha@mail.ru', '123456')
+    # list_users()
