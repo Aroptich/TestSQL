@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "testsql"
+version = "0.1.0"
+description = ""
+authors = ["Alexsandr <artamoshkinas@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pymysql = "^1.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
