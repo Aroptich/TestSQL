@@ -2,6 +2,7 @@ from datetime import datetime
 from prettytable import PrettyTable
 
 import pymysql
+import hashlib
 
 from config import host, port, password, user, db_name
 
@@ -120,7 +121,11 @@ def create_user(email: str, password: str) -> tuple:
     """Функция возвращает sql-запрос на создание нового пользователя в таблице `users"""
     query = ("INSERT INTO `'users'` (`email`, `password`) "
             "VALUES (%s, %s);")
-    return query, email, password
+    #Хеширование пароля
+    hash_pass = hashlib.sha224(password.encode())
+    #Преобразуем объект хеширования в шестнадцатиричное число
+    safty_pass =hash_pass.hexdigest()
+    return query, email, safty_pass
 
 
 @connect
@@ -132,7 +137,7 @@ def update_user(new_password: str, email: str) -> tuple:
 
 
 if __name__ == '__main__':
-    # create_table('users')
+    create_table('users')
     create_user('masha@mail.ru', 'aaaaaaa')
     create_user('dasha@mail.ru', 'bbbbbbb')
     list_users()
