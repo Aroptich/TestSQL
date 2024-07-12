@@ -1,4 +1,5 @@
 from datetime import datetime
+from prettytable import PrettyTable
 
 import pymysql
 
@@ -57,6 +58,41 @@ def logger(func):
 
     return wrapper
 
+def reading_data(func):
+    """Функция-декоратор для вывода данных из БД в консоль"""
+    def wrapper(*args, **kwargs):
+        try:
+            connection = pymysql.connect(
+                host=host,
+                port=port,
+                user=user,
+                password=password,
+                database=db_name,
+                cursorclass=pymysql.cursors.DictCursor
+            )
+            print("Соединение с БД установлено")
+            try:
+                with connection.cursor() as cursor:
+                    res = cursor.execute(func(*args, **kwargs))
+                    if res <= 0:
+                        print(f'Данных не найдено!')
+                        return None
+                    x = PrettyTable()
+                    rows = cursor.fetchall()
+                    x.field_names = [row for row in rows[0]]
+                    for row in rows:
+                        x.add_row([row[i] for i in row])
+                    print(x)
+                    connection.commit()
+                    return res
+            finally:
+                connection.close()
+        except Exception as err:
+            print("В соединение с БД отказано...")
+            print(err)
+
+    return wrapper
+
 
 @connect
 @logger
@@ -70,7 +106,7 @@ def create_table(table_name) -> tuple:
     return query, table_name
 
 
-@connect
+@reading_data
 @logger
 def list_users() -> str:
     """Функуия возвращает всех пользователей из таблицы 'users'"""
@@ -97,6 +133,7 @@ def update_user(new_password: str, email: str) -> tuple:
 
 if __name__ == '__main__':
     # create_table('users')
-    # create_user('gosha@mail.ru', '123456')
-    # list_users()
-    update_user('11112', 'gosha@mail.ru')
+    create_user('masha@mail.ru', 'aaaaaaa')
+    create_user('dasha@mail.ru', 'bbbbbbb')
+    list_users()
+    # update_user('11112', 'gosha@mail.ru')
