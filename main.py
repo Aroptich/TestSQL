@@ -136,9 +136,18 @@ def update_user(new_password: str, email: str) -> tuple:
     return query, new_password, email
 
 
+@connect
+@logger
+def delete_user(id: int) -> tuple:
+    """Функция возвращает sl-запрос и 'id' пользователя на удаление его из `users`"""
+    query = "DELETE FROM `'users'` WHERE `id`=%s"
+    return query, id
+
+
 if __name__ == '__main__':
-    create_table('users')
-    create_user('masha@mail.ru', 'aaaaaaa')
-    create_user('dasha@mail.ru', 'bbbbbbb')
+    # create_table('users')
+    # create_user('masha@mail.ru', 'aaaaaaa')
+    # create_user('dasha@mail.ru', 'bbbbbbb')
     list_users()
     # update_user('11112', 'gosha@mail.ru')
+    # delete_user(1)
