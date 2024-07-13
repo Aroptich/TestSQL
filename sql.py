@@ -41,7 +41,11 @@ def create_user(email: str, password: str) -> tuple:
 def update_user(new_password: str, email: str) -> tuple:
     """Функция возращает sql-запрос и новый пароль пользователя в таблице `users`"""
     query = "UPDATE `'users'` SET `password`=%s WHERE `email`=%s;"
-    return query, new_password, email
+    # Хеширование пароля
+    hash_pass = hashlib.sha224(new_password.encode())
+    # Преобразуем объект хеширования в шестнадцатиричное число
+    safty_pass = hash_pass.hexdigest()
+    return query, safty_pass, email
 
 @reading_data
 @logger
