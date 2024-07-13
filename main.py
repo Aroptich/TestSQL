@@ -43,6 +43,14 @@ def update_user(new_password: str, email: str) -> tuple:
     query = "UPDATE `'users'` SET `password`=%s WHERE `email`=%s;"
     return query, new_password, email
 
+@reading_data
+@logger
+def detial_user(email: str) -> tuple:
+    """Функция проверяет по email существует ли данный пользователь в БД.
+    Возвращает кортеж из sql-запроса и email"""
+    query = "SELECT `email` FROM `'users'` WHERE email=%s"
+    return query, email
+
 
 @connect
 @logger
@@ -50,6 +58,10 @@ def delete_user(id: int) -> tuple:
     """Функция возвращает sl-запрос и 'id' пользователя на удаление его из `users`"""
     query = "DELETE FROM `'users'` WHERE `id`=%s"
     return query, id
+
+def authorization(email: str, passwor: str):
+    """Функция проверяет пользователя по email"""
+    pass
 
 
 if __name__ == '__main__':
@@ -59,3 +71,4 @@ if __name__ == '__main__':
     list_users()
     # update_user('11112', 'gosha@mail.ru')
     # delete_user(1)
+    detial_user('masha@mail.ru')

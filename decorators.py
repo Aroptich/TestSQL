@@ -73,7 +73,14 @@ def reading_data(func):
             print("Соединение с БД установлено")
             try:
                 with connection.cursor() as cursor:
-                    res = cursor.execute(func(*args, **kwargs))
+                    if isinstance(func(*args, **kwargs), tuple):
+                        sql, *values = func(*args, **kwargs)
+                        if values is not None:
+                            res = cursor.execute(sql, values)
+                        else:
+                            res = cursor.execute(sql)
+                    else:
+                        res = cursor.execute(func(*args, **kwargs))
                     if res <= 0:
                         print(f'Данных не найдено!')
                         return None
