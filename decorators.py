@@ -23,12 +23,13 @@ def connect(func):
                     if isinstance(func(*args, **kwargs), tuple):
                         sql, *values = func(*args, **kwargs)
                         if values is not None:
-                            cursor.execute(sql, values)
+                            res = cursor.execute(sql, values)
                         else:
-                            cursor.execute(sql)
+                            res = cursor.execute(sql)
                     else:
-                        cursor.execute(func(*args, **kwargs))
+                        res = cursor.execute(func(*args, **kwargs))
                     connection.commit()
+                    return res
             finally:
                 connection.close()
 
@@ -91,7 +92,7 @@ def reading_data(func):
                         x.add_row([row[i] for i in row])
                     print(x)
                     connection.commit()
-                    return res
+                    return res, row
             finally:
                 connection.close()
         except Exception as err:
