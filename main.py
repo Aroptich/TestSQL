@@ -5,7 +5,7 @@ from sql import create_table, list_users, update_user, delete_user, get_id_user
 if __name__ == '__main__':
     #Создаем сущность в БД
     db = create_table('users')
-    print(create_table('users'))
+
     #Создаем нового пользователя
     new_user1 = registr('alex@mail.ru', '1234')
 
