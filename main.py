@@ -1,11 +1,11 @@
 from authorization import authorization
 from registration import registr
-from sql import create_table, list_users, update_user, delete_user
+from sql import create_table, list_users, update_user, delete_user, get_id_user
 
 if __name__ == '__main__':
     #Создаем сущность в БД
     db = create_table('users')
-
+    print(create_table('users'))
     #Создаем нового пользователя
     new_user1 = registr('alex@mail.ru', '1234')
 
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     update_user('11112', 'alex@mail.ru')
 
     #Удаляем пользователя 'new_user3'
-    delete_user(3)
+    print(delete_user(3))
 
     # Выводим всех пользователей в консоль
     list_users()

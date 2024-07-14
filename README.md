@@ -29,7 +29,8 @@ poetry shell
 
 ```
 < PROJECT ROOT >
-   |
+   |--test/                 #директория с тестами
+   |     |--sql_test.py     #тесты sql-запросов
    |--.gitignore                 
    |-- authorization.py     #  
    |-- config.py            #файл с настройками приложения   

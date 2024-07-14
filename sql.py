@@ -62,6 +62,13 @@ def password_user(email: str)-> tuple:
     query = "SELECT `password` FROM `'users'` WHERE email=%s"
     return query, email
 
+@reading_data
+@logger
+def get_id_user(email: str) -> tuple:
+    """Функция возвращает 'id' пользователя по его 'email'"""
+    query = "SELECT `id` FROM `'users'` WHERE email=%s"
+    return query, email
+
 
 @connect
 @logger
